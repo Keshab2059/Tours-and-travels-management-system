@@ -436,7 +436,7 @@
                 </div>
 
                 <!-- Charts Section -->
-                <div class="charts-section">
+                <!-- <div class="charts-section">
                     <div class="chart-card">
                         <h3>Monthly Bookings</h3>
                         <canvas id="bookingsChart"></canvas>
@@ -446,7 +446,69 @@
                         <h3>Monthly Revenue</h3>
                         <canvas id="revenueChart"></canvas>
                     </div>
-                </div>
+                </div> -->
+
+                <div class="charts-section">
+    <div class="chart-card">
+        <h3>Monthly Bookings</h3>
+        <canvas id="bookingsChart"></canvas>
+    </div>
+    
+    <div class="chart-card">
+        <h3>Monthly Revenue</h3>
+        <canvas id="revenueChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Bookings Pie Chart
+    const bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
+    new Chart(bookingsCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                data: [120, 95, 140, 110, 160, 130],
+                backgroundColor: [
+                    '#4F46E5', '#7C3AED', '#EC4899',
+                    '#F59E0B', '#10B981', '#3B82F6'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // Revenue Pie Chart
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                data: [4200, 3800, 5100, 4600, 6200, 5400],
+                backgroundColor: [
+                    '#059669', '#0D9488', '#0284C7',
+                    '#7C3AED', '#DB2777', '#D97706'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
 
                 <!-- Recent Bookings Table -->
                 <div class="table-card">
