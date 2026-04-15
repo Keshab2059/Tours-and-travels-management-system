@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %}Payment Successful{% endblock %}
+{% block main_content %}
+
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">✓</div>
+        
+        <h2>Payment Successful!</h2>
+        <p class="success-message">Your payment has been processed successfully.</p>
+        
+        {% if ref_id %}
+        <div class="ref-id">
+            <label>Reference ID:</label>
+            <code>{{ ref_id }}</code>
+        </div>
+        {% endif %}
+        
+        <div class="success-details">
+            <p>Your booking has been confirmed and you will receive a confirmation email shortly.</p>
+            <p style="margin-top: 1rem; font-size: 14px; color: #6b7280;">Payment Status: <strong style="color: #1D9E75;">{{ status }}</strong></p>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{% url 'my_bookings' %}" class="btn btn-primary">View My Bookings</a>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Return Home</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-container {
+    padding: 2rem 0;
+    background: #f8fbff;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    text-align: center;
+    margin: 0 2rem;
+}
+
+.success-icon {
+    width: 60px;
+    height: 60px;
+    background: #d1fae5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #1D9E75;
+    margin: 0 auto 1.5rem;
+}
+
+.success-card h2 {
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.success-message {
+    color: #6b7280;
+    font-size: 16px;
+    margin-bottom: 1.5rem;
+}
+
+.ref-id {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.ref-id label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 14px;
+}
+
+.ref-id code {
+    background: #111;
+    color: #1D9E75;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    display: block;
+    word-break: break-all;
+}
+
+.success-details {
+    background: #f0fdf4;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border: 1px solid #bbf7d0;
+}
+
+.success-details p {
+    color: #1d4e2f;
+    font-size: 14px;
+    margin: 0;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: #1D9E75;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #0F6E56;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+</style>
+
+{% endblock %}

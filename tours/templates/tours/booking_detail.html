@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %}Booking Confirmation{% endblock %}
+
+{% block main_content %}
+<div class="page-wrap" style="padding: 60px 0;">
+  <div style="max-width: 700px; margin: 0 auto;">
+    
+    <!-- Success Message -->
+    <div style="text-align: center; margin-bottom: 48px;">
+      <div style="font-size: 64px; margin-bottom: 16px;">✅</div>
+      <h1 style="font-size: 2.2rem; font-weight: 800; color: #1e293b; margin-bottom: 8px;">Booking Confirmed!</h1>
+      <p style="font-size: 1rem; color: #64748b; margin: 0;">Your tour package has been successfully booked</p>
+    </div>
+
+    <!-- Booking Summary Card -->
+    <div style="background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1); overflow: hidden; margin-bottom: 32px;">
+      
+      <!-- Card Header -->
+      <div style="background: linear-gradient(135deg, #2f6bff 0%, #1e40af 100%); padding: 24px; color: white;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+          <div>
+            <div style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.9; margin-bottom: 4px;">Booking ID</div>
+            <div style="font-size: 1.75rem; font-weight: 700;">#{{ booking.id }}</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.9; margin-bottom: 4px;">Status</div>
+            <div style="font-size: 1rem; font-weight: 600; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; display: inline-block;">{{ booking.get_status_display }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div style="padding: 32px;">
+        
+        <!-- Package Info -->
+        <div style="margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid #e2e8f0;">
+          <h2 style="font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0 0 12px 0;">{{ booking.package.title }}</h2>
+          <p style="font-size: 1rem; color: #64748b; margin: 0; display: flex; align-items: center; gap: 6px;">
+            📍 {{ booking.package.destination.name }}
+          </p>
+        </div>
+
+        <!-- Booking Details Grid -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 28px;">
+          
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 8px;">Booking Date</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: #1e293b;">{{ booking.booking_date|date:"M d, Y" }}</div>
+          </div>
+
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 8px;">Travel Date</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: #1e293b;">{{ booking.travel_date|date:"M d, Y"|default:"Not scheduled" }}</div>
+          </div>
+
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 8px;">Number of Persons</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: #1e293b;">{{ booking.num_persons }} {{ booking.num_persons|pluralize:"person,people" }}</div>
+          </div>
+
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 8px;">Duration</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: #1e293b;">{{ booking.package.duration }} {{ booking.package.duration|pluralize:"day,days" }}</div>
+          </div>
+
+        </div>
+
+        <!-- Additional Package Info -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 28px; padding: 16px; background: #f8fafc; border-radius: 12px;">
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Difficulty</div>
+            <div style="font-size: 1rem; font-weight: 600; color: #1e293b;">{{ booking.package.get_difficulty_display }}</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #64748b; margin-bottom: 6px;">Group Size</div>
+            <div style="font-size: 1rem; font-weight: 600; color: #1e293b;">{{ booking.package.group_size_min }}-{{ booking.package.group_size_max }} people</div>
+          </div>
+        </div>
+
+        <!-- Total Price -->
+        <div style="padding: 16px; background: linear-gradient(135deg, #f0fdf4 0%, #f0f9ff 100%); border-radius: 12px; border: 1px solid #dbeafe; display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px;">
+          <div style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em;">Total Price</div>
+          <div style="font-size: 1.75rem; font-weight: 700; color: #15803d;">${{ booking.total_price }}</div>
+        </div>
+
+        <!-- Description (if available) -->
+        {% if booking.package.description %}
+        <div style="padding: 16px; background: #f1f5f9; border-radius: 12px; border-left: 4px solid #2f6bff;">
+          <div style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase; color: #64748b; margin-bottom: 8px; letter-spacing: 0.05em;">Package Details</div>
+          <p style="font-size: 0.95rem; line-height: 1.6; color: #475569; margin: 0;">{{ booking.package.description|truncatewords:50 }}</p>
+        </div>
+        {% endif %}
+
+      </div>
+
+      <!-- Card Footer -->
+      <div style="padding: 20px 32px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <a href="{% url 'my_bookings' %}" class="btn btn-primary btn-lg" style="display: inline-block; text-decoration: none;">Pay For Bookings</a>
+        <a href="{% url 'home' %}" class="btn btn-outline btn-lg" style="display: inline-block; text-decoration: none;">Back to Home</a>
+      </div>
+
+    </div>
+
+    <!-- Info Message -->
+    <div style="text-align: center; padding: 24px; background: #eff6ff; border-radius: 12px; border: 1px solid #bfdbfe;">
+      <p style="font-size: 0.95rem; color: #1e40af; margin: 0;">
+        ℹ️ A confirmation email has been sent to your registered email address.<br/>
+        You can manage your bookings from the "My Bookings" page.
+      </p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

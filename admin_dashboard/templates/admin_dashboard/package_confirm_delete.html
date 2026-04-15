@@ -1,0 +1,200 @@
+{% extends "admin_dashboard/base.html" %}
+{% block page_title %}Delete Package{% endblock %}
+{% block main_content %}
+<div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>Delete Package</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, {{ user.username|title }}</span>
+            <a href="{% url 'admin_logout' %}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Delete Package</h2>
+                <a href="{% url 'admin_package_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Packages
+                </a>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation -->
+        <div class="form-card">
+            <div class="alert alert-warning">
+                <h4><i class="fas fa-exclamation-triangle"></i> Warning!</h4>
+                <p>You are about to delete this package. This action cannot be undone.</p>
+            </div>
+
+            <div class="package-details">
+                <h5>Package Details</h5>
+                <table class="detail-table">
+                    <tr>
+                        <td><strong>Package ID:</strong></td>
+                        <td>#{{ package.id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Title:</strong></td>
+                        <td>{{ package.title }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Destination:</strong></td>
+                        <td>{{ package.destination.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Price:</strong></td>
+                        <td class="price">${{ package.price }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Duration:</strong></td>
+                        <td>{{ package.duration }} days</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Difficulty:</strong></td>
+                        <td>
+                            <span class="badge badge-{{ package.difficulty }}">{{ package.get_difficulty_display }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Max Altitude:</strong></td>
+                        <td>{{ package.max_altitude|m }}m</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Group Size:</strong></td>
+                        <td>{{ package.group_size_min }} - {{ package.group_size_max }} persons</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Created:</strong></td>
+                        <td>{{ package.created_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                </table>
+
+                {% if package.description %}
+                <div class="mt-3">
+                    <strong>Description:</strong>
+                    <p>{{ package.description }}</p>
+                </div>
+                {% endif %}
+
+                {% if package.image %}
+                <div class="mt-3">
+                    <strong>Package Image:</strong><br>
+                    <img src="{{ package.image.url }}" alt="{{ package.title }}" style="max-width: 300px; max-height: 200px; border-radius: 5px; margin-top: 10px;">
+                </div>
+                {% endif %}
+            </div>
+
+            <form method="POST" style="margin-top: 30px;">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Yes, Delete Package
+                    </button>
+                    <a href="{% url 'admin_package_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+}
+
+.alert-warning h4 {
+    color: #856404;
+    margin-bottom: 10px;
+}
+
+.alert-warning p {
+    margin: 0;
+}
+
+.package-details h5 {
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.detail-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-table td:first-child {
+    width: 150px;
+    font-weight: 500;
+    color: #666;
+}
+
+.detail-table td:last-child {
+    color: #333;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+.mt-3 {
+    margin-top: 20px;
+}
+
+.badge-easy {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-hard {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

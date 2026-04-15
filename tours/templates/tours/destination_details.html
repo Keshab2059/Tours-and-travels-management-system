@@ -1,0 +1,65 @@
+{% extends 'tours/base.html' %}
+{% block title %}{{ destination.name }} Yatra Nepal{% endblock %}
+{% block content %}
+
+<div class="page-wrap">
+  <div class="mt-32">
+    <a href="{% url 'destinations' %}" style="font-size:.875rem;color:var(--muted);">← Back to Destinations</a>
+  </div>
+
+  <div class="detail-layout">
+    <div>
+      <div style="border-radius:16px;overflow:hidden;height:360px;margin-bottom:28px;">
+        {% if destination.image %}
+        <img src="{{ destination.image.url }}" alt="{{ destination.name }}" style="height:100%;" />
+        {% else %}
+        <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=900&q=80" alt="{{ destination.name }}" style="height:100%;" />
+        {% endif %}
+      </div>
+
+      <span class="eyebrow">{{ destination.location }}</span>
+      <h2 class="mt-8">{{ destination.name }}</h2>
+      <p style="color:var(--muted);margin-top:12px;line-height:1.8;">{{ destination.description }}</p>
+
+      {% if packages %}
+      <h2 class="section-title mt-32 mb-16">Available Packages</h2>
+      <div class="grid-2">
+        {% for pkg in packages %}
+        <div class="card">
+          <div class="card-img">
+            {% if pkg.image %}
+            <img src="{{ pkg.image.url }}" alt="{{ pkg.title }}" />
+            {% else %}
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&q=80" alt="{{ pkg.title }}" />
+            {% endif %}
+            <span class="card-badge">{{ pkg.get_difficulty_display }}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-footer mb-8">
+              <h3 class="card-title">{{ pkg.title }}</h3>
+              <div class="card-price"><small>From</small><strong>${{ pkg.price }}</strong></div>
+            </div>
+            <div class="card-meta mb-16">
+              <span>🗓 {{ pkg.duration }} days</span>
+              <span>👥 {{ pkg.group_size_min }}–{{ pkg.group_size_max }}</span>
+            </div>
+            <a class="btn btn-primary btn-sm" href="{% url 'package_detail' pkg.pk %}">View Details</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <aside class="sidebar">
+      <div class="booking-card">
+        <h2>📍 Quick Info</h2>
+        <div class="price-row"><span>Location</span><strong>{{ destination.location }}</strong></div>
+        <div class="price-row"><span>Total Packages</span><strong>{{ packages.count }}</strong></div>
+        <div class="price-row"><span>Best Season</span><strong>Oct – Nov, Mar – Apr</strong></div>
+        <a class="btn btn-primary btn-block mt-16" href="{% url 'packages' %}">Browse All Packages</a>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block page_title %}My Bookings{% endblock %}
+{% block main_content %}
+<div class="page-wrap">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:40px;margin-bottom:28px;flex-wrap:wrap;gap:14px;">
+    <div>
+      <span class="eyebrow">Your Adventures</span>
+      <h2>My Bookings</h2>
+    </div>
+    <a class="btn btn-primary" href="{% url 'my_bookings' %}">My Booking</a>
+  </div>
+
+  {% if bookings %}
+  <div class="table-wrap">
+    <table class="bookings-table">
+      <thead>
+        <tr>
+          <th style="width: 8%;">ID</th>
+          <th style="width: 18%;">Package</th>
+          <th style="width: 15%;">Destination</th>
+          <th style="width: 12%;">Booking Date</th>
+          <th style="width: 12%;">Travel Date</th>
+          <th style="width: 8%;">Persons</th>
+          <th style="width: 12%;">Total Price</th>
+          <th style="width: 10%;">Status</th>
+          <th style="width: 10%;">Payment Status</th>
+          <th style="width: 15%; text-align: center;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+        <tr class="booking-row">
+          <td class="booking-id"><strong>#{{ booking.id }}</strong></td>
+          <td class="booking-package">
+            <a href="{% url 'package_detail' booking.package.id %}" class="package-link">{{ booking.package.title }}</a>
+          </td>
+          <td class="booking-destination">{{ booking.package.destination.name }}</td>
+          <td class="booking-date">{{ booking.booking_date|date:"M d, Y" }}</td>
+          <td class="booking-travel-date">{{ booking.travel_date|date:"M d, Y"|default:"Not set" }}</td>
+          <td class="booking-persons" style="text-align: center;">{{ booking.num_persons }}</td>
+          <td class="booking-price"><strong class="price-highlight">${{ booking.total_price }}</strong></td>
+          <td class="booking-status">
+            <span class="badge badge-{{ booking.status }}">{{ booking.get_status_display }}</span>
+          </td>
+          <td class="booking-payment-status">
+            {% if booking.payment_status == 'paid' %}
+              <span class="badge badge-success">Paid</span>
+            {% else %}
+              <span class="badge badge-warning">Pending</span>
+            {% endif %}
+          </td>
+          <td class="booking-action">
+            {% if booking.payment_status != 'paid' %}
+              <a href="{% url 'payment_options' booking.id %}" class="btn btn-sm btn-pay" title="Pay for this booking">
+                Pay Now
+              </a>
+            {% endif %}
+            <form action="{% url 'delete_booking' booking.id %}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this booking?');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-delete" title="Delete this booking">
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-bookings">
+    <p class="empty-text">📋 No bookings yet.</p>
+    <p class="empty-subtext">Your next great adventure is just one click away!</p>
+    <a href="{% url 'packages' %}" class="btn btn-primary btn-lg">Explore Packages</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

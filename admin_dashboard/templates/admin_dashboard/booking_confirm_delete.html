@@ -1,0 +1,279 @@
+{% extends "admin_dashboard/base.html" %}
+{% block page_title %}Delete Booking{% endblock %}
+{% block main_content %}
+<div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>Delete Booking</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, {{ user.username|title }}</span>
+            <a href="{% url 'admin_logout' %}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Delete Booking</h2>
+                <a href="{% url 'admin_booking_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Bookings
+                </a>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation -->
+        <div class="form-card">
+            <div class="alert alert-warning">
+                <h4><i class="fas fa-exclamation-triangle"></i> Warning!</h4>
+                <p>You are about to delete this booking. This action cannot be undone.</p>
+            </div>
+
+            <div class="booking-details">
+                <h5>Booking Details</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="detail-table">
+                            <tr>
+                                <td><strong>Booking ID:</strong></td>
+                                <td>#{{ booking.id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Package:</strong></td>
+                                <td>{{ booking.package.title }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Destination:</strong></td>
+                                <td>{{ booking.package.destination.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Customer:</strong></td>
+                                <td>
+                                    {% if booking.user %}
+                                        {{ booking.user.username|title }}
+                                    {% else %}
+                                        <span class="text-muted">Guest User</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Booking Date:</strong></td>
+                                <td>{{ booking.booking_date|date:"M d, Y H:i" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="detail-table">
+                            <tr>
+                                <td><strong>Travel Date:</strong></td>
+                                <td>
+                                    {% if booking.travel_date %}
+                                        {{ booking.travel_date|date:"M d, Y" }}
+                                    {% else %}
+                                        <span class="text-muted">Not set</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Number of Persons:</strong></td>
+                                <td>{{ booking.num_persons }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Package Price:</strong></td>
+                                <td>${{ booking.package.price }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Price:</strong></td>
+                                <td class="price">${{ booking.total_price }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Booking Status:</strong></td>
+                                <td>
+                                    <span class="badge badge-{{ booking.status }}">{{ booking.get_status_display }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="payment-details mt-3">
+                    <h6>Payment Information</h6>
+                    <table class="detail-table">
+                        <tr>
+                            <td><strong>Payment Method:</strong></td>
+                            <td>
+                                {% if booking.payment_method %}
+                                    <span class="badge badge-{{ booking.payment_method }}">{{ booking.get_payment_method_display }}</span>
+                                {% else %}
+                                    <span class="text-muted">Not specified</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Payment Status:</strong></td>
+                            <td>
+                                <span class="badge badge-{{ booking.payment_status }}">{{ booking.get_payment_status_display }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <form method="POST" style="margin-top: 30px;">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Yes, Delete Booking
+                    </button>
+                    <a href="{% url 'admin_booking_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+}
+
+.alert-warning h4 {
+    color: #856404;
+    margin-bottom: 10px;
+}
+
+.alert-warning p {
+    margin: 0;
+}
+
+.booking-details h5 {
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.booking-details h6 {
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 0 15px;
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.detail-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-table td:first-child {
+    width: 150px;
+    font-weight: 500;
+    color: #666;
+}
+
+.detail-table td:last-child {
+    color: #333;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+.mt-3 {
+    margin-top: 20px;
+}
+
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-confirmed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-paid {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-cod {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.badge-esewa {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+.price {
+    font-weight: 600;
+    color: #28a745;
+}
+
+@media (max-width: 768px) {
+    .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

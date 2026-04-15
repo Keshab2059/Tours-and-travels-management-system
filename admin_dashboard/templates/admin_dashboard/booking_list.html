@@ -1,0 +1,251 @@
+{% extends "admin_dashboard/base.html" %}
+{% block page_title %}Bookings Management{% endblock %}
+{% block main_content %}
+<div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>Bookings Management</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, {{ user.username|title }}</span>
+            <a href="{% url 'admin_logout' %}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>All Bookings</h2>
+                <div class="stats-summary">
+                    <span class="stat-badge">Total: {{ bookings.count }}</span>
+                    <span class="stat-badge confirmed">Confirmed: {{ bookings|length }}</span>
+                    <span class="stat-badge pending">Pending: {{ bookings|length }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="table-card">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Package</th>
+                        <th>Destination</th>
+                        <th>Customer</th>
+                        <th>Booking Date</th>
+                        <th>Travel Date</th>
+                        <th>Persons</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td><strong>#{{ booking.id }}</strong></td>
+                        <td>
+                            <div class="package-info">
+                                <strong>{{ booking.package.title }}</strong>
+                                <br><small class="text-muted">{{ booking.package.duration }} days</small>
+                            </div>
+                        </td>
+                        <td>{{ booking.package.destination.name }}</td>
+                        <td>
+                            {% if booking.user %}
+                                {{ booking.user.username|title }}
+                            {% else %}
+                                <span class="text-muted">Guest</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ booking.booking_date|date:"M d, Y" }}</td>
+                        <td>
+                            {% if booking.travel_date %}
+                                {{ booking.travel_date|date:"M d, Y" }}
+                            {% else %}
+                                <span class="text-muted">Not set</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ booking.num_persons }}</td>
+                        <td class="price">${{ booking.total_price }}</td>
+                        <td>
+                            <span class="badge badge-{{ booking.status }}">{{ booking.get_status_display }}</span>
+                        </td>
+                        <td>
+                            <div class="payment-info">
+                                {% if booking.payment_method %}
+                                    <span class="badge badge-{{ booking.payment_method }}">{{ booking.get_payment_method_display }}</span>
+                                {% endif %}
+                                <br>
+                                <span class="badge badge-{{ booking.payment_status }}">{{ booking.get_payment_status_display }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'admin_booking_update' booking.id %}" class="btn btn-sm btn-edit" title="Edit Booking">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'admin_booking_delete' booking.id %}" class="btn btn-sm btn-delete" title="Delete Booking">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="11" style="text-align: center; padding: 40px;">
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                                <h4>No bookings found</h4>
+                                <p class="text-muted">No bookings have been made yet.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.stats-summary {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.stat-badge {
+    background: #e9ecef;
+    color: #495057;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.stat-badge.confirmed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.stat-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.package-info strong {
+    display: block;
+    color: #333;
+}
+
+.payment-info {
+    line-height: 1.2;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit {
+    background: #ffc107;
+    color: #212529;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.btn-edit:hover {
+    background: #e0a800;
+    color: #212529;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+    color: white;
+}
+
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-confirmed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-paid {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-cod {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.badge-esewa {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+}
+
+.empty-state i {
+    margin-bottom: 15px;
+}
+
+.empty-state h4 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #999;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .stats-summary {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}
+</style>
+{% endblock %}

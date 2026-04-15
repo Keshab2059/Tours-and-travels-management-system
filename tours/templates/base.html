@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block page_title%} Yatra Nepal {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="header">
+    <div class="logo">
+      <h2>Yatra <span>Nepal</span></h2>
+    </div>
+
+    <nav class="nav">
+      <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+      <a href="{% url 'destinations' %}" class="{% if request.resolver_match.url_name == 'destinations' %}active{% endif %}">Destinations</a>
+      <a href="{% url 'packages' %}" class="{% if request.resolver_match.url_name == 'packages' %}active{% endif %}">Packages</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'my_bookings' %}" class="{% if 'booking' in request.resolver_match.url_name %}active{% endif %}">My Booking</a>
+      {% endif %}
+    </nav>
+
+    <!-- <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M11 11L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input type="text" placeholder="Search destinations...">
+    </div> -->
+
+    <div class="cta">
+      {% if user.is_authenticated %}
+        <div class="user-dropdown">
+          <div class="user-badge">
+            <div class="avatar">{{ user.first_name|slice:":2"|upper|default:user.username|slice:":2"|upper }}</div>
+            {{ user.first_name|default:user.username }}
+          </div>
+          <div class="dropdown-menu">
+            <a href="{% url 'profile' %}">My Profile</a>
+            <a href="{% url 'edit_profile' %}">Edit Profile</a>
+            <a href="{% url 'logout' %}">Logout</a>
+          </div>
+        </div>
+      {% else %}
+        <a class="btn-ghost" href="{% url 'login' %}">Login</a>
+        <a class="btn-primary" href="{% url 'register' %}">Sign Up</a>
+      {% endif %}
+    </div>
+</header>
+
+<!-- body start-->
+{% block main_content %}
+
+{% endblock %}
+<!-- body end -->
+
+<!-- footer page -->
+<footer class="site-footer">
+    <div class="footer-grid">
+      <div>
+        <div class="brand footer-brand">Yatra Nepal</div>
+        <p class="footer-text">Elevating adventure through curated expeditions and expert-led mountain journeys since 2012.</p>
+      </div>
+      <div>
+        <h3 class="footer-heading">Explore</h3>
+        <ul class="footer-list">
+          <li><a href="{% url 'destinations' %}">Destinations</a></li>
+          <li><a href="{% url 'packages' %}">Packages</a></li>
+          {% if user.is_authenticated %}<li><a href="#">My Bookings</a></li>{% endif %}
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-heading">Company</h3>
+        <ul class="footer-list">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-heading">Contact</h3>
+        <ul class="footer-list">
+          <li>Kathmandu, Nepal</li>
+          <li>+977 1 4000000</li>
+          <li>hellonepal@gmail.com</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p> 2026 Yatra Nepal. The Digital Sherpa.</p>
+    </div>
+  </footer>
+</body>
+</html>

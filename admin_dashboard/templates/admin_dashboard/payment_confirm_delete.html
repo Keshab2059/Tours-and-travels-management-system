@@ -1,0 +1,305 @@
+{% extends "admin_dashboard/base.html" %}
+{% block page_title %}Delete Payment{% endblock %}
+{% block main_content %}
+<div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>Delete Payment</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, {{ user.username|title }}</span>
+            <a href="{% url 'admin_logout' %}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Delete Payment</h2>
+                <a href="{% url 'admin_payment_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Payments
+                </a>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation -->
+        <div class="form-card">
+            <div class="alert alert-warning">
+                <h4><i class="fas fa-exclamation-triangle"></i> Warning!</h4>
+                <p>You are about to delete this payment record. This action cannot be undone.</p>
+                <p class="mb-0"><strong>Note:</strong> Deleting this payment will not affect the booking status, but the payment record will be permanently removed.</p>
+            </div>
+
+            <div class="payment-details">
+                <h5>Payment Details</h5>
+                <table class="detail-table">
+                    <tr>
+                        <td><strong>Payment ID:</strong></td>
+                        <td>#{{ payment.id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Booking ID:</strong></td>
+                        <td>#{{ payment.booking.id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Package:</strong></td>
+                        <td>{{ payment.booking.package.title }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customer:</strong></td>
+                        <td>
+                            {% if payment.booking.user %}
+                                {{ payment.booking.user.username|title }}
+                            {% else %}
+                                <span class="text-muted">Guest User</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Amount:</strong></td>
+                        <td class="price">${{ payment.amount }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Payment Method:</strong></td>
+                        <td>
+                            <span class="badge badge-{{ payment.payment_method|lower }}">{{ payment.get_payment_method_display }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Payment Status:</strong></td>
+                        <td>
+                            <span class="badge badge-{{ payment.status|lower }}">{{ payment.get_status_display }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Transaction ID:</strong></td>
+                        <td>
+                            {% if payment.transaction_id %}
+                                <code class="transaction-id">{{ payment.transaction_id }}</code>
+                            {% else %}
+                                <span class="text-muted">Not available</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Created:</strong></td>
+                        <td>{{ payment.created_at|date:"M d, Y H:i" }}</td>
+                    </tr>
+                </table>
+
+                <!-- Related Booking Information -->
+                <div class="related-booking mt-4">
+                    <h6><i class="fas fa-calendar-check"></i> Related Booking Information</h6>
+                    <div class="booking-info-card">
+                        <table class="detail-table">
+                            <tr>
+                                <td><strong>Booking Date:</strong></td>
+                                <td>{{ payment.booking.booking_date|date:"M d, Y" }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Travel Date:</strong></td>
+                                <td>
+                                    {% if payment.booking.travel_date %}
+                                        {{ payment.booking.travel_date|date:"M d, Y" }}
+                                    {% else %}
+                                        <span class="text-muted">Not set</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Number of Persons:</strong></td>
+                                <td>{{ payment.booking.num_persons }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Booking Status:</strong></td>
+                                <td>
+                                    <span class="badge badge-{{ payment.booking.status }}">{{ payment.booking.get_status_display }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Price:</strong></td>
+                                <td class="price">${{ payment.booking.total_price }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" style="margin-top: 30px;">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Yes, Delete Payment
+                    </button>
+                    <a href="{% url 'admin_payment_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+}
+
+.alert-warning h4 {
+    color: #856404;
+    margin-bottom: 10px;
+}
+
+.alert-warning p {
+    margin: 0;
+}
+
+.payment-details h5 {
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.payment-details h6 {
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.detail-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-table td:first-child {
+    width: 150px;
+    font-weight: 500;
+    color: #666;
+}
+
+.detail-table td:last-child {
+    color: #333;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+.mt-4 {
+    margin-top: 25px;
+}
+
+.related-booking {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.booking-info-card {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.transaction-id {
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: #666;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+.price {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.badge-cash {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.badge-esewa {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.badge-khalti {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.badge-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-confirmed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

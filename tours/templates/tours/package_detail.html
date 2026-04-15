@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %}{{ package.title }} | Package Detail{% endblock %}
+
+{% block main_content %}
+<div class="page-wrap" style="padding: 40px 0;">
+  <div style="max-width: 900px; margin: 0 auto;">
+    <h1 style="font-size: 2.8rem; font-weight: 800; margin-bottom: 24px; text-align: center;">{{ package.title }}</h1>
+    {% if package.image %}
+    <div style="margin-bottom: 32px; text-align: center;">
+      <img src="{{ package.image.url }}" alt="{{ package.title }}" style="max-width: 100%; height: auto; border-radius: 18px;" />
+    </div>
+    {% endif %}
+    <div style="display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin-bottom: 24px; color: #334155;">
+      <div style="min-width: 220px; padding: 18px 22px; background: #f8fafc; border-radius: 14px; box-shadow: 0 12px 30px rgba(15,23,42,0.06);">
+        <div style="font-size: 0.88rem; text-transform: uppercase; letter-spacing: .08em; color: #64748b; margin-bottom: 8px;">Price</div>
+        <div style="font-size: 1.3rem; font-weight: 700;">${{ package.price }}</div>
+      </div>
+      <div style="min-width: 220px; padding: 18px 22px; background: #f8fafc; border-radius: 14px; box-shadow: 0 12px 30px rgba(15,23,42,0.06);">
+        <div style="font-size: 0.88rem; text-transform: uppercase; letter-spacing: .08em; color: #64748b; margin-bottom: 8px;">Difficulty</div>
+        <div style="font-size: 1.3rem; font-weight: 700;">{{ package.get_difficulty_display }}</div>
+      </div>
+      <div style="min-width: 220px; padding: 18px 22px; background: #f8fafc; border-radius: 14px; box-shadow: 0 12px 30px rgba(15,23,42,0.06);">
+        <div style="font-size: 0.88rem; text-transform: uppercase; letter-spacing: .08em; color: #64748b; margin-bottom: 8px;">Location</div>
+        <div style="font-size: 1.3rem; font-weight: 700;">{{ package.destination.location }}</div>
+      </div>
+    </div>
+    <div style="background: #ffffff; border-radius: 18px; padding: 32px; box-shadow: 0 14px 40px rgba(15,23,42,0.08); color: #334155; line-height: 1.9;">
+      <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 18px;">Package Description</h2>
+      <p>{{ package.description }}</p>
+      <div style="margin-top: 28px; text-align: center;">
+        {% if user.is_authenticated %}
+        <a href="{% url 'create_booking' package.id %}" class="btn btn-primary" style="display: inline-block;">Book Now</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary" style="display: inline-block;">Login to Book</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

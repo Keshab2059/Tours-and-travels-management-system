@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %}Payment Failed{% endblock %}
+{% block main_content %}
+
+<div class="failure-container">
+    <div class="failure-card">
+        <div class="failure-icon">✕</div>
+        
+        <h2>Payment Failed</h2>
+        <p class="failure-message">Unable to process your payment.</p>
+        
+        <div class="failure-details">
+            <p>Your booking has NOT been confirmed. Please try the following:</p>
+            <ul style="margin-top: 1rem; text-align: left; color: #374151; font-size: 14px;">
+                <li>✓ Check your internet connection</li>
+                <li>✓ Verify your eSewa account has sufficient balance</li>
+                <li>✓ Try again with a different payment method</li>
+                <li>✓ Contact support if problems persist</li>
+            </ul>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{% url 'my_bookings' %}" class="btn btn-primary">Back to My Bookings</a>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Return Home</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.failure-container {
+    padding: 2rem 0;
+    background: #f8fbff;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.failure-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 2rem;
+}
+
+.failure-icon {
+    width: 60px;
+    height: 60px;
+    background: #fee2e2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #dc2626;
+    margin: 0 auto 1.5rem;
+}
+
+.failure-card h2 {
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.failure-message {
+    color: #6b7280;
+    font-size: 16px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.failure-details {
+    background: #fef2f2;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border: 1px solid #fecaca;
+}
+
+.failure-details p {
+    color: #7f1d1d;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.failure-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.failure-details li {
+    padding: 0.5rem 0;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: #1D9E75;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #0F6E56;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+</style>
+
+{% endblock %}

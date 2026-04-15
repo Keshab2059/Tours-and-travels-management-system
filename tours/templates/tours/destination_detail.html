@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %}Destination Detail{% endblock %}
+
+{% block main_content %}
+<div class="page-wrap">
+  <section class="destination-section">
+    <div>
+      <h1>{{ destination.name }}</h1>
+      <p>{{ destination.description }}</p>
+      <div style="margin-top: 28px;">
+        <a href="{% url 'packages' %}" class="btn btn-primary">View Packages</a>
+      </div>
+    </div>
+    <div>
+      {% if destination.image %}
+      <img src="{{ destination.image.url }}" alt="{{ destination.name }}" style="width:100%;border-radius:15px;" />
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

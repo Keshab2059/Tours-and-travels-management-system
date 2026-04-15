@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %} Destinations {% endblock %}
+
+{% block main_content %}
+<section class="destination-hero">
+    <div class="destination-hero-content">
+        <h1>Adventure Awaits</h1>
+        <h2>Find Your Path to the High Peaks</h2>
+        <p>Discover hand-picked destinations across the Himalayas, curated by local experts.</p>
+    </div>
+</section>
+
+<div class="page-wrap">
+  <div class="filter-layout">
+
+    <section>
+      {% if destinations %}
+      <div class="grid-1" id="dest-grid">
+        {% for destination in destinations %}
+        <div class="card" data-name="{{ destination.name|lower }}" data-loc="{{ destination.location|lower }}">
+          <div class="card-img">
+            {% if destination.image %}
+            <img src="{{ destination.image.url }}" alt="{{ destination.name }}" />
+            {% else %}
+            <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600&q=80" alt="{{ destination.name }}" />
+            {% endif %}
+            <span class="card-badge">{{ destination.packages.count }} package{{ destination.packages.count|pluralize }}</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">{{ destination.name }}</h3>
+            <p class="card-sub">📍 {{ destination.location }}</p>
+            <p class="card-text">{{ destination.description|truncatewords:20 }}</p>
+            <a class="btn btn-dark btn-sm" href="{% url 'destination_detail' destination.id %}">Explore →</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">🏔️</div>
+        <h3>No destinations yet</h3>
+        <p>Check back soon — we're adding amazing new places!</p>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+
+<script>
+function filterCards() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  document.querySelectorAll('#dest-grid .card').forEach(c => {
+    const match = c.dataset.name.includes(q) || c.dataset.loc.includes(q);
+    c.style.display = match ? '' : 'none';
+  });
+}
+function clearFilters() {
+  document.getElementById('search-input').value = '';
+  document.querySelectorAll('#dest-grid .card').forEach(c => c.style.display = '');
+}
+</script>
+{% endblock %}

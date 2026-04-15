@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %} Home {% endblock %}
+{% block main_content %}
+
+<!-- Hero -->
+<section class="hero-section">
+  <div class="hero-section__inner">
+    <h1 class="hero-section__title">Your adventure starts here.</h1>
+    <p class="hero-section__desc">Discover Nepal, one journey at a time. Experience the magic of the Himalayas and uncover its hidden gems.</p>
+    <a class="btn btn-white" href="{% url 'packages' %}">Explore Packages</a>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="why-section">
+  <div class="section-inner">
+    <span class="section-tag">Why Choose Us</span>
+    <h2 class="section-title">Adventure Done Right</h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🏔️</div>
+        <h3>Expert Guides</h3>
+        <p>Certified Sherpa guides with decades of high-altitude experience on every expedition.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🛡️</div>
+        <h3>Safe Journeys</h3>
+        <p>Comprehensive safety protocols, emergency evacuation plans, and full travel insurance.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🌿</div>
+        <h3>Eco Friendly</h3>
+        <p>Carbon-neutral operations, zero-waste trekking, and active trail conservation programs.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💳</div>
+        <h3>Easy Booking</h3>
+        <p>Seamless online booking with flexible payment options including eSewa and Khalti.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Packages -->
+<section class="package-section">
+  <div class="section-inner">
+    <span class="section-tag">Packages</span>
+    <h2 class="section-title">Current Journeys</h2>
+    <p class="section-sub">Handpicked treks and tours for every kind of adventurer.</p>
+    <div class="package-grid">
+      {% for package in packages %}
+      <div class="package-card">
+        {% if package.image %}
+        <img src="{{ package.image.url }}" alt="{{ package.name }}" class="package-card__img">
+        {% endif %}
+        <div class="package-card__body">
+          <h4 class="package-card__title">{{ package.name }}</h4>
+          <p class="package-card__desc">{{ package.description|truncatewords:18 }}</p>
+          <div class="package-card__footer">
+            <span class="package-card__price">From ${{ package.price }}</span>
+            <a class="btn btn-sm btn-outline" href="{% url 'package_detail' package.id %}">View</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="empty-msg">No packages available yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-inner">
+    <span class="section-tag section-tag--light">Ready to Trek?</span>
+    <h2 class="cta-section__title">Start Your Himalayan Journey Today</h2>
+    <p class="cta-section__desc">Join thousands of adventurers who have trusted Yatra Nepal for a life-changing expedition.</p>
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary btn-lg" href="{% url 'packages' %}">Book a Package</a>
+    {% else %}
+    <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Create Free Account</a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

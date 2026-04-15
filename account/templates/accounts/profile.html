@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %} My Profile {% endblock %}
+{% block main_content %}
+
+<section class="profile-section">
+  <div class="container">
+    <div class="profile-card">
+      <h2>My Profile</h2>
+      <div class="profile-info">
+        <div class="info-item">
+          <label>Username:</label>
+          <span>{{ user.username }}</span>
+        </div>
+        <div class="info-item">
+          <label>Email:</label>
+          <span>{{ user.email }}</span>
+        </div>
+        <div class="info-item">
+          <label>First Name:</label>
+          <span>{{ user.first_name }}</span>
+        </div>
+        <div class="info-item">
+          <label>Last Name:</label>
+          <span>{{ user.last_name }}</span>
+        </div>
+      </div>
+      <a href="{% url 'edit_profile' %}" class="btn-primary">Edit Profile</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.profile-section {
+  padding: 2rem 0;
+  background: #f8fbff;
+  min-height: 60vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card h2 {
+  margin-bottom: 1.5rem;
+  color: #0f172a;
+}
+
+.profile-info {
+  margin-bottom: 2rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.info-item span {
+  color: #6b7280;
+}
+</style>
+
+{% endblock %}

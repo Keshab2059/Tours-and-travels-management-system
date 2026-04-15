@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_title %} Packages {% endblock %}
+
+{% block main_content %}
+<section class="package-hero">
+    <div class="package-hero-content">
+        <h1>Travel Packages</h1>
+        <p>Choose from our most popular Nepal travel experiences.</p>
+    </div>
+</section>
+
+<div class="page-wrap">
+  <div class="filter-layout">
+    <aside>
+      <form method="get">
+      <div class="filter-card">
+        <h2>🔍 Filter Packages</h2>
+        <div class="filter-group">
+          <label class="filter-label">Search</label>
+          <input class="form-input" type="text" name="search" id="search-input" placeholder="Search packages…" value="{{ search }}" oninput="this.form.submit()" />
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Difficulty</label>
+          <div class="checkbox-list">
+            <label class="check-item"><input type="checkbox" name="difficulty" value="easy" {% if 'easy' in selected_difficulties %}checked{% endif %} onchange="this.form.submit()" /><span>Easy</span></label>
+            <label class="check-item"><input type="checkbox" name="difficulty" value="moderate" {% if 'moderate' in selected_difficulties %}checked{% endif %} onchange="this.form.submit()" /><span>Moderate</span></label>
+            <label class="check-item"><input type="checkbox" name="difficulty" value="hard" {% if 'hard' in selected_difficulties %}checked{% endif %} onchange="this.form.submit()" /><span>Hard</span></label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Max Price</label>
+          <input class="range-input" type="range" name="max_price" id="price-range" min="0" max="5000" value="{{ max_price|default:'5000' }}" oninput="document.getElementById('price-val').textContent = '$' + Number(this.value).toLocaleString(); this.form.submit()" />
+          <div class="range-vals"><span>$0</span><span id="price-val">{% if max_price %}${{ max_price }}{% else %}$5,000+{% endif %}</span></div>
+        </div>
+        <button class="btn btn-outline btn-block" type="button" onclick="this.form.reset(); this.form.submit();">Reset Filters</button>
+      </div>
+    </form>
+    </aside>
+
+    <section>
+      {% if packages %}
+      <div class="grid-2" id="pkg-grid">
+        {% for pkg in packages %}
+        <div class="card"
+             data-title="{{ pkg.title|lower }}"
+             data-difficulty="{{ pkg.difficulty }}"
+             data-price="{{ pkg.price }}">
+          <div class="card-img">
+            {% if pkg.image %}
+            <img src="{{ pkg.image.url }}" alt="{{ pkg.title }}" />
+            {% else %}
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80" alt="{{ pkg.title }}" />
+            {% endif %}
+            <span class="card-badge">{{ pkg.get_difficulty_display }}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-footer mb-8">
+              <h3 class="card-title">{{ pkg.title }}</h3>
+              <div class="card-price"><small>From</small><strong>${{ pkg.price }}</strong></div>
+            </div>
+            <p class="card-sub">📍 {{ pkg.destination.name }}</p>
+            <p class="card-text">{{ pkg.description|truncatewords:18 }}</p>
+            <div class="card-footer">
+              <div class="card-meta">
+                <span>🗓 {{ pkg.duration }}d</span>
+                <span>👥 {{ pkg.group_size_min }}–{{ pkg.group_size_max }}</span>
+                {% if pkg.max_altitude %}<span>⛰ {{ pkg.max_altitude }}m</span>{% endif %}
+              </div>
+              <a class="btn btn-primary btn-sm" href="{% url 'package_detail' pkg.id %}">Details</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">🎒</div>
+        <h3>No packages yet</h3>
+        <p>Check back soon for amazing trekking packages!</p>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "admin_dashboard/base.html" %}
+{% block page_title %}Destinations Management{% endblock %}
+{% block main_content %}
+<div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>Destinations Management</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, {{ user.username|title }}</span>
+            <a href="{% url 'admin_logout' %}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>All Destinations</h2>
+                <a href="{% url 'admin_destination_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add New Destination
+                </a>
+            </div>
+        </div>
+
+        <!-- Destinations Table -->
+        <div class="table-card">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Destination Name</th>
+                        <th>Location</th>
+                        <th>Coordinates</th>
+                        <th>Description</th>
+                        <th>Image</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for destination in destinations %}
+                    <tr>
+                        <td><strong>#{{ destination.id }}</strong></td>
+                        <td>
+                            <div class="destination-info">
+                                <strong>{{ destination.name }}</strong>
+                                {% if destination.image %}
+                                <br><small class="text-muted">Has Image</small>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>{{ destination.location }}</td>
+                        <td>
+                            <div class="coordinates">
+                                {% if destination.latitude and destination.longitude %}
+                                    <small>{{ destination.latitude }}, {{ destination.longitude }}</small>
+                                {% else %}
+                                    <span class="text-muted">Not set</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="description-preview">
+                                {% if destination.description %}
+                                    {{ destination.description|truncatewords:10 }}
+                                {% else %}
+                                    <span class="text-muted">No description</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if destination.image %}
+                                <img src="{{ destination.image.url }}" alt="{{ destination.name }}" class="destination-thumbnail">
+                            {% else %}
+                                <span class="text-muted">No image</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ destination.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'admin_destination_update' destination.id %}" class="btn btn-sm btn-edit" title="Edit Destination">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'admin_destination_delete' destination.id %}" class="btn btn-sm btn-delete" title="Delete Destination">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px;">
+                            <div class="empty-state">
+                                <i class="fas fa-map-marked-alt fa-3x text-muted mb-3"></i>
+                                <h4>No destinations found</h4>
+                                <p class="text-muted">Start by adding your first travel destination.</p>
+                                <a href="{% url 'admin_destination_create' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> Add Destination
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+
+.destination-info strong {
+    display: block;
+    color: #333;
+}
+
+.coordinates small {
+    font-family: monospace;
+    color: #666;
+}
+
+.description-preview {
+    max-width: 200px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.destination-thumbnail {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit {
+    background: #ffc107;
+    color: #212529;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.btn-edit:hover {
+    background: #e0a800;
+    color: #212529;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+    color: white;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+}
+
+.empty-state i {
+    margin-bottom: 15px;
+}
+
+.empty-state h4 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #999;
+    margin-bottom: 20px;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block page_title %}Payment Options - Booking #{{ booking.id }}{% endblock %}
+{% block main_content %}
+<div class="page-wrap">
+  <div style="max-width: 600px; margin: 40px auto;">
+    <div style="text-align: center; margin-bottom: 32px;">
+      <span class="eyebrow">Complete Your Booking</span>
+      <h2>Choose Payment Method</h2>
+      <p style="color: #6b7280; margin-top: 8px;">Select how you'd like to pay for your adventure</p>
+    </div>
+
+    <!-- Booking Details Card -->
+    <div class="card" style="margin-bottom: 32px; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+      <div class="card-body" style="padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 600; color: #111; margin-bottom: 4px;">{{ booking.package.title }}</h3>
+            <p style="color: #6b7280; font-size: 14px;">{{ booking.package.destination.name }}</p>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 20px; font-weight: 700; color: #B85C30;">${{ booking.total_price }}</div>
+            <div style="font-size: 12px; color: #6b7280;">{{ booking.num_persons }} person{{ booking.num_persons|pluralize }}</div>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid #f3f4f6; padding-top: 16px;">
+          <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
+            <span style="color: #6b7280;">Booking ID:</span>
+            <span style="font-weight: 500;">#{{ booking.id }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px;">
+            <span style="color: #6b7280;">Travel Date:</span>
+            <span style="font-weight: 500;">{{ booking.travel_date|date:"M d, Y"|default:"Not set" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 14px;">
+            <span style="color: #6b7280;">Duration:</span>
+            <span style="font-weight: 500;">{{ booking.package.duration }} day{{ booking.package.duration|pluralize }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Options -->
+    <div style="display: grid; gap: 16px;">
+      <!-- Cash on Delivery Option -->
+      <div class="card" style="border: 2px solid #e5e7eb; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#1D9E75'" onmouseout="this.style.borderColor='#e5e7eb'">
+        <div class="card-body" style="padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; background: #E1F5EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+              🏠
+            </div>
+            <div>
+              <h4 style="font-size: 16px; font-weight: 600; color: #111; margin-bottom: 4px;">Cash on Delivery</h4>
+              <p style="font-size: 14px; color: #6b7280; margin: 0;">Pay when you receive your booking confirmation</p>
+            </div>
+          </div>
+          <a href="{% url 'process_cod_payment' booking.id %}" class="btn btn-primary" style="text-decoration: none;">Select COD</a>
+        </div>
+      </div>
+
+      <!-- eSewa Option -->
+      <div class="card" style="border: 2px solid #e5e7eb; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.borderColor='#1D9E75'" onmouseout="this.style.borderColor='#e5e7eb'">
+        <div class="card-body" style="padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; background: #E1F5EE; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+              💳
+            </div>
+            <div>
+              <h4 style="font-size: 16px; font-weight: 600; color: #111; margin-bottom: 4px;">eSewa</h4>
+              <p style="font-size: 14px; color: #6b7280; margin: 0;">Instant online payment - secure and fast</p>
+            </div>
+          </div>
+          <a href="{% url 'process_esewa_payment' booking.id %}" class="btn btn-primary" style="text-decoration: none;">Pay with eSewa</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Bookings -->
+    <div style="text-align: center; margin-top: 32px;">
+      <a href="{% url 'my_bookings' %}" class="btn btn-outline" style="text-decoration: none;">← Back to My Bookings</a>
+    </div>
+  </div>
+</div>
+
+<style>
+.page-wrap {
+  padding: 20px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1D9E75;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 16px;
+}
+
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 22px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: #1D9E75;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #0F6E56;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: #E1F5EE;
+  color: #0F6E56;
+  border: none;
+  font-size: 12px;
+  padding: 8px 16px;
+}
+
+.btn-outline:hover {
+  background: #d1ede4;
+}
+</style>
+{% endblock %}

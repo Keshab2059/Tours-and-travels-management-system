@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Payment - Yatra Nepal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f8fbff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .payment-container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #1D9E75;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        h2 {
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        
+        p {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-details {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            color: #111;
+            font-weight: 600;
+        }
+        
+        .esewa-logo {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .esewa-logo img {
+            max-width: 100px;
+            margin: 0.5rem auto;
+        }
+        
+        .no-js-message {
+            display: none;
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            color: #92400e;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 14px;
+        }
+    </style>
+    <noscript>
+        <style>
+            .spinner, .no-js-message { display: none !important; }
+            .no-js-message { display: block !important; }
+        </style>
+    </noscript>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="spinner"></div>
+        <h2>Processing Payment</h2>
+        <p>Redirecting to eSewa payment gateway...</p>
+        
+        <div class="payment-details">
+            <div class="detail-item">
+                <span class="detail-label">Booking ID:</span>
+                <span class="detail-value">#{{ booking.id }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Package:</span>
+                <span class="detail-value">{{ booking.package.title|truncatewords:3 }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Persons:</span>
+                <span class="detail-value">{{ booking.num_persons }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Total Amount:</span>
+                <span class="detail-value">Rs. {{ total_amount }}</span>
+            </div>
+        </div>
+        
+        <div class="esewa-logo">
+            <p style="font-size: 12px; color: #9ca3af;">Secure Payment via</p>
+            <svg width="80" height="24" viewBox="0 0 80 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 6h6v12H0V6z" fill="#1D9E75"/>
+                <path d="M8 6h6v12H8V6z" fill="#FF6B35"/>
+                <text x="20" y="18" font-family="Arial" font-size="12" fill="#0f172a" font-weight="bold">eSewa</text>
+            </svg>
+        </div>
+        
+        <div class="no-js-message">
+            ⚠️ JavaScript is required to process this payment. Please enable JavaScript and refresh this page.
+        </div>
+    </div>
+
+    <!-- Hidden eSewa Payment Form -->
+    <form id="esewaForm" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST" style="display:none;">
+        <!-- Amount Details -->
+        <input type="hidden" name="amount" value="{{ amount }}">
+        <input type="hidden" name="tax_amount" value="{{ tax_amount }}">
+        <input type="hidden" name="total_amount" value="{{ total_amount }}">
+        
+        <!-- Transaction Details -->
+        <input type="hidden" name="transaction_uuid" value="{{ transaction_uuid }}">
+        <input type="hidden" name="product_code" value="{{ product_code }}">
+        
+        <!-- Additional Charges -->
+        <input type="hidden" name="product_service_charge" value="0">
+        <input type="hidden" name="product_delivery_charge" value="0">
+        
+        <!-- Callback URLs -->
+        <input type="hidden" name="success_url" value="{{ success_url }}">
+        <input type="hidden" name="failure_url" value="{{ failure_url }}">
+        
+        <!-- Signature -->
+        <input type="hidden" name="signed_field_names" value="total_amount,transaction_uuid,product_code">
+        <input type="hidden" name="signature" value="{{ signature }}">
+    </form>
+
+    <script>
+        // Auto-submit the form to eSewa gateway
+        document.addEventListener('DOMContentLoaded', function() {
+            // Small delay to ensure DOM is fully loaded
+            setTimeout(function() {
+                document.getElementById('esewaForm').submit();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
